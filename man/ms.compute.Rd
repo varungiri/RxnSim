@@ -1,6 +1,7 @@
 \name{ms.compute}
 \alias{ms.compute}
 \alias{ms.compute.sim.matrix}
+\alias{ms.compute.PCA}
 
 \title{Computes Similarity of Molecules}
 
@@ -15,6 +16,8 @@ ms.compute (molA, molB, format = 'smiles', standardize = T, explicitH = F, sim.m
 ms.compute.sim.matrix (molA, format = 'smiles', standardize = T, explicitH = F,
             sim.method = 'tanimoto', fp.type = 'extended', fp.mode = 'bit', fp.depth = 6,
             fp.size = 1024, clearCache = T)
+ms.compute.PCA(molA, format = 'smiles', standardize = T, explicitH = F, fp.type = 'extended',
+            fp.mode = 'bit', fp.depth = 6, fp.size = 1024, clearCache = T)
 }
 
 \arguments{
@@ -36,11 +39,13 @@ ms.compute.sim.matrix (molA, format = 'smiles', standardize = T, explicitH = F,
   Returns similarity value(s).
   \item{\code{ms.compute}}{returns a similarity value.}
   \item{\code{ms.compute.sim.matrix}}{returns a \eqn{m \times m} symmetric matrix of similarity values. \eqn{m} is the length of the input list.}
+  \item{\code{ms.compute.PCA}}{returns prcomp object.}
 }
 
 \details{
 See \code{\link[RxnSim:rs.compute]{rs.compute}} functions, for details for fingerprints and similarity matrices.
 \code{ms.compute} can use fingerprint caching by enabling \code{fpCached} option. \code{ms.compute} and \code{ms.compute.sim.matrix} use same cache as \code{rs.compute} and other functions in the package.
+\code{ms.compute.PCA} computes PCA based on the fingerprints using prcomp funtion.
 }
 
 \examples{

@@ -120,6 +120,54 @@ ms.compute.sim.matrix <- function (molA, format = 'smiles', standardize = T, exp
   return(result)
 }
 
+ms.compute.PCA <- function (molA, format = 'smiles', standardize = T, explicitH = F,
+                            fp.type = 'extended', fp.mode = 'bit', fp.depth = 6, fp.size = 1024, clearCache = T) {
+  
+  format <- tolower(format)
+  
+  fp.type <- tolower(fp.type)
+  fp.mode <- tolower(fp.mode)
+  
+  if (missing(molA) || length(molA) < 2) {
+    stop("Pass two or more molecules to compute similarity.", call. = F)
+  }
+  
+  .fpTypeCheck(fp.type, fp.mode)
+  if (fp.mode != 'bit') {
+    stop("Method only implemented for bit fingerprints.")
+  }
+  
+  result <- tryCatch({
+    if (format[[1]] == 'smiles') {
+      molSObj <- lapply(molA, .smilesParser, standardize, explicitH)
+    } else if (format[[1]] == 'mol') {
+      molSObj <- lapply(molA, .molParser, standardize, explicitH)
+    } else {
+      stop("Invalid input format.", call. = F)
+    }
+    
+    if (clearCache) {
+      rs.clearCache()
+    }
+    fpMolS <- lapply(molSObj, .makeFP, fp.type, fp.mode, fp.depth, fp.size, .fp.env$fp_map)
+    
+    # Compute PCA
+    matfp <- fingerprint::fp.to.matrix(fpMolS)
+    nonUniqCols <- apply(matfp, 2, function(x) length(unique(x)) > 1)
+    matfp <- matfp[, nonUniqCols]
+    pca <- prcomp(matfp, center = TRUE, scale. = TRUE)
+    
+    if (clearCache) {
+      rs.clearCache()
+    }
+    
+    pca
+  }, error = function (err) {
+    stop (err)
+  })
+  return(result)
+}
+
 rs.compute <- function (rxnA, rxnB, format = 'rsmi', standardize = T, explicitH = F, reversible = T,
                         algo = 'msim', sim.method = 'tanimoto', fp.type = 'extended', fp.mode = 'bit',
                         fp.depth = 6, fp.size = 1024, verbose = F, fpCached = F) {
