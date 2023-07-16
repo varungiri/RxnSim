@@ -8,7 +8,7 @@ Maintainer: Varun Giri <varungiri@gmail.com>
 Description: Methods to compute chemical similarity between two or more reactions and molecules. Allows masking of chemical substructures for weighted similarity computations. Uses packages 'rCDK' and 'fingerprint' for cheminformatics functionality.
 License: GPL-3
 Depends: R (>= 4.3.0)
-Imports: rJava, fingerprint, data.table, rcdk (>= 3.8.1)
+Imports: methods, rJava, fingerprint, data.table, rcdk (>= 3.8.1)
 Author: Varun Giri [aut, cre]
 NeedsCompilation: no
 Repository: CRAN

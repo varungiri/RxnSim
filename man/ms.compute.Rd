@@ -16,8 +16,9 @@ ms.compute (molA, molB, format = 'smiles', standardize = T, explicitH = F, sim.m
 ms.compute.sim.matrix (molA, format = 'smiles', standardize = T, explicitH = F,
             sim.method = 'tanimoto', fp.type = 'extended', fp.mode = 'bit', fp.depth = 6,
             fp.size = 1024, clearCache = T)
-ms.compute.PCA(molA, format = 'smiles', standardize = T, explicitH = F, fp.type = 'extended',
-            fp.mode = 'bit', fp.depth = 6, fp.size = 1024, clearCache = T)
+ms.compute.PCA(molA, format = 'smiles', standardize = T, explicitH = F, 
+            fp.type = 'extended', fp.mode = 'bit', fp.depth = 6, fp.size = 1024,
+            clearCache = T)
 }
 
 \arguments{
