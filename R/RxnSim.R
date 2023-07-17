@@ -8,7 +8,7 @@
     .jnew ('org.openscience.cdk.smiles.SmilesGenerator')
   .javaObj.env$acm <-
     'org.openscience.cdk.tools.manipulator.AtomContainerManipulator'
-  .fp.env$fp_map <- new.env(parent = emptyenv(), hash = T)
+  .fp.env$fp_map <- new.env(parent = emptyenv(), hash = TRUE)
   .global.env$DefaultDB <-
     paste(libname, pkgname, 'DB/Metadata.txt', sep = '/')
   .global.env$Rhea <-
@@ -16,28 +16,28 @@
 }
 
 rs.clearCache <- function () {
-  .fp.env$fp_map <- new.env(parent = emptyenv(), hash = T)
+  .fp.env$fp_map <- new.env(parent = emptyenv(), hash = TRUE)
 }
 
 ms.compute <-
   function (molA,
             molB,
             format = 'smiles',
-            standardize = T,
-            explicitH = F,
+            standardize = TRUE,
+            explicitH = FALSE,
             sim.method = 'tanimoto',
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            fpCached = F) {
+            fpCached = FALSE) {
     format <- tolower(format)
     sim.method[[1]] <- tolower(sim.method[[1]])
     fp.type <- tolower(fp.type)
     fp.mode <- tolower(fp.mode)
     
     if (missing(molA) || missing(molB)) {
-      stop("Two inputs needed to compute similarity", call. = F)
+      stop("Two inputs needed to compute similarity", call. = FALSE)
     } else if (length(molA) > 1 || length(molB) > 1) {
       warning("Input(s) has length > 1 and only the first element(s) will be used.")
       molA <- molA[[1]]
@@ -46,7 +46,7 @@ ms.compute <-
     
     if (!is.character(molA) || !is.character(molB)) {
       stop("Invalid input. Enter in SMILES format or path to MOL file.",
-           call. = F)
+           call. = FALSE)
     }
     
     .fpTypeCheck(fp.type, fp.mode)
@@ -61,7 +61,7 @@ ms.compute <-
       } else if (format[[1]] == 'mol') {
         mA <- .molParser(molA, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       if (format[[2]] == 'smiles') {
@@ -69,7 +69,7 @@ ms.compute <-
       } else if (format[[2]] == 'mol') {
         mB <- .molParser(molB, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       if (fpCached) {
@@ -89,21 +89,21 @@ ms.compute <-
 ms.compute.sim.matrix <-
   function (molA,
             format = 'smiles',
-            standardize = T,
-            explicitH = F,
+            standardize = TRUE,
+            explicitH = FALSE,
             sim.method = 'tanimoto',
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            clearCache = T) {
+            clearCache = TRUE) {
     format <- tolower(format)
     sim.method[[1]] <- tolower(sim.method[[1]])
     fp.type <- tolower(fp.type)
     fp.mode <- tolower(fp.mode)
     
     if (missing(molA) || length(molA) < 2) {
-      stop("Pass two or more molecules to compute similarity.", call. = F)
+      stop("Pass two or more molecules to compute similarity.", call. = FALSE)
     }
     
     .fpTypeCheck(fp.type, fp.mode)
@@ -115,7 +115,7 @@ ms.compute.sim.matrix <-
       } else if (format[[1]] == 'mol') {
         molSObj <- lapply(molA, .molParser, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       len <- length(molA)
@@ -152,20 +152,20 @@ ms.compute.sim.matrix <-
 ms.compute.PCA <-
   function (molA,
             format = 'smiles',
-            standardize = T,
-            explicitH = F,
+            standardize = TRUE,
+            explicitH = FALSE,
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            clearCache = T) {
+            clearCache = TRUE) {
     format <- tolower(format)
     
     fp.type <- tolower(fp.type)
     fp.mode <- tolower(fp.mode)
     
     if (missing(molA) || length(molA) < 2) {
-      stop("Pass two or more molecules to compute similarity.", call. = F)
+      stop("Pass two or more molecules to compute similarity.", call. = FALSE)
     }
     
     .fpTypeCheck(fp.type, fp.mode)
@@ -179,7 +179,7 @@ ms.compute.PCA <-
       } else if (format[[1]] == 'mol') {
         molSObj <- lapply(molA, .molParser, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       if (clearCache) {
@@ -217,17 +217,17 @@ rs.compute <-
   function (rxnA,
             rxnB,
             format = 'rsmi',
-            standardize = T,
-            explicitH = F,
-            reversible = T,
+            standardize = TRUE,
+            explicitH = FALSE,
+            reversible = TRUE,
             algo = 'msim',
             sim.method = 'tanimoto',
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            verbose = F,
-            fpCached = F) {
+            verbose = FALSE,
+            fpCached = FALSE) {
     format <- tolower(format)
     algo <- tolower(algo)
     sim.method[[1]] <- tolower(sim.method[[1]])
@@ -235,7 +235,7 @@ rs.compute <-
     fp.mode <- tolower(fp.mode)
     
     if (missing(rxnA) || missing(rxnB)) {
-      stop("Two reactions needed to compute similarity", call. = F)
+      stop("Two reactions needed to compute similarity", call. = FALSE)
     } else if (length(rxnA) > 1 || length(rxnB) > 1) {
       warning("Input(s) has length > 1 and only the first element(s) will be used.")
       rxnA <- rxnA[[1]]
@@ -243,7 +243,7 @@ rs.compute <-
     }
     if (!is.character(rxnA) || !is.character(rxnB)) {
       stop("Invalid input. Enter in (REACTION) SMILES format or path to RXN file.",
-           call. = F)
+           call. = FALSE)
     }
     
     .algoCheck(algo)
@@ -259,14 +259,14 @@ rs.compute <-
       } else if (format[[1]] == 'rxn') {
         rA <- .mdlParser(rxnA, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       if (format[[2]] == 'rsmi') {
         rB <- .rsmiParser(rxnB, standardize, explicitH)
       } else if (format[[2]] == 'rxn') {
         rB <- .mdlParser(rxnB, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       .similarity(
@@ -293,16 +293,16 @@ rs.compute.list <-
   function (rxnA,
             rxnB,
             format = 'rsmi',
-            standardize = T,
-            explicitH = F,
-            reversible = T,
+            standardize = TRUE,
+            explicitH = FALSE,
+            reversible = TRUE,
             algo = 'msim',
             sim.method = 'tanimoto',
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            clearCache = T) {
+            clearCache = TRUE) {
     format <- tolower(format)
     algo <- tolower(algo)
     sim.method[[1]] <- tolower(sim.method[[1]])
@@ -310,7 +310,7 @@ rs.compute.list <-
     fp.mode <- tolower(fp.mode)
     
     if (missing(rxnA) || missing(rxnB)) {
-      stop("Pass two reaction lists to compute similarity.", call. = F)
+      stop("Pass two reaction lists to compute similarity.", call. = FALSE)
     }
     
     .algoCheck(algo)
@@ -326,14 +326,14 @@ rs.compute.list <-
       } else if (format[[1]] == 'rxn') {
         rxnAObjs <- lapply(rxnA, .mdlParser, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       if (format[[2]] == 'rsmi') {
         rxnBObjs <- lapply(rxnB, .rsmiParser, standardize, explicitH)
       } else if (format[[2]] == 'rxn') {
         rxnBObjs <- lapply(rxnB, .mdlParser, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       len <- length(rxnA)
@@ -356,7 +356,7 @@ rs.compute.list <-
               fp.mode = fp.mode,
               fp.depth = fp.depth,
               fp.size = fp.size,
-              cached = T
+              cached = TRUE
             )
           )
         sim[i, ] <- v
@@ -374,16 +374,16 @@ rs.compute.list <-
 rs.compute.sim.matrix <-
   function (rxnA,
             format = 'rsmi',
-            standardize = T,
-            explicitH = F,
-            reversible = T,
+            standardize = TRUE,
+            explicitH = FALSE,
+            reversible = TRUE,
             algo = 'msim',
             sim.method = 'tanimoto',
             fp.type = 'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            clearCache = T) {
+            clearCache = TRUE) {
     format <- tolower(format)
     algo <- tolower(algo)
     sim.method[[1]] <- tolower(sim.method[[1]])
@@ -391,7 +391,7 @@ rs.compute.sim.matrix <-
     fp.mode <- tolower(fp.mode)
     
     if (missing(rxnA) || length(rxnA) < 2) {
-      stop("Pass two or more reactions to compute similarity.", call. = F)
+      stop("Pass two or more reactions to compute similarity.", call. = FALSE)
     }
     
     .algoCheck(algo)
@@ -404,7 +404,7 @@ rs.compute.sim.matrix <-
       } else if (format[[1]] == 'rxn') {
         rxnSObj <- lapply(rxnA, .mdlParser, standardize, explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       len <- length(rxnA)
@@ -427,7 +427,7 @@ rs.compute.sim.matrix <-
               fp.mode = fp.mode,
               fp.depth = fp.depth,
               fp.size = fp.size,
-              cached = T
+              cached = TRUE
             )
           )
         sim[i, (i + 1):len] <- v
@@ -446,19 +446,19 @@ rs.compute.sim.matrix <-
 
 rs.makeDB <-
   function (txtFile,
-            header = F,
+            header = FALSE,
             sep = '\t',
-            standardize = T,
-            explicitH = F,
+            standardize = TRUE,
+            explicitH = FALSE,
             fp.type =
               'extended',
             fp.mode = 'bit',
             fp.depth = 6,
             fp.size = 1024,
-            useMask = F,
+            useMask = FALSE,
             maskStructure,
             mask,
-            recursive = F) {
+            recursive = FALSE) {
     fp.type <- tolower(fp.type)
     fp.mode <- tolower(fp.mode)
     
@@ -470,27 +470,27 @@ rs.makeDB <-
           .global.env$Rhea,
           sep = ''
         )
-      warning(msg, call. = F, immediate. = T)
+      warning(msg, call. = FALSE, immediate. = TRUE)
       txtFile <- .global.env$DefaultDB
     }
     
     .fpTypeCheck(fp.type, fp.mode)
     
-    if (useMask == T) {
+    if (useMask == TRUE) {
       if (missing(maskStructure) || maskStructure == '') {
         stop('Enter a structure to mask in form of a SMILES or SMARTS.',
-             call. = F)
+             call. = FALSE)
       }
     }
     
     DB <- NULL
     tryCatch({
-      #DB <- read.delim(txtFile, header=header, sep=sep, strip.white=T)
+      #DB <- read.delim(txtFile, header=header, sep=sep, strip.white=TRUE)
       DB <-
         data.table::fread(txtFile,
                           header = header,
                           sep = sep,
-                          data.table = F)
+                          data.table = FALSE)
       colnames(DB) <- c('EC', 'ID', 'RSMI')
       
       rxnObjList <-
@@ -498,7 +498,7 @@ rs.makeDB <-
                .rsmiParser,
                standardize,
                explicitH)
-      if (useMask == T) {
+      if (useMask == TRUE) {
         rxnObjList <-
           lapply(
             rxnObjList,
@@ -514,7 +514,7 @@ rs.makeDB <-
         DB <- cbind(DB, MaskedRSMI)
       }
       
-      fp_map_cache <- new.env(parent = emptyenv(), hash = T)
+      fp_map_cache <- new.env(parent = emptyenv(), hash = TRUE)
       fpList <- list()
       len <- 0
       for (obj in rxnObjList) {
@@ -577,24 +577,24 @@ rs.compute.DB <-
             DB,
             format = 'rsmi',
             ecrange = '*',
-            reversible = T,
+            reversible = TRUE,
             algo = 'msim',
             sim.method = 'tanimoto',
-            sort = T,
-            fpCached = F) {
+            sort = TRUE,
+            fpCached = FALSE) {
     format <- tolower(format)
     sim.method[[1]] <- tolower(sim.method[[1]])
     algo <- tolower(algo)
     
     if (missing(rxnA)) {
-      stop("Reaction needed to compute similarity", call. = F)
+      stop("Reaction needed to compute similarity", call. = FALSE)
     } else if (length(rxnA) > 1) {
       warning("Input(s) has length > 1 and only the first element(s) will be used.")
       rxnA <- rxnA[[1]]
     }
     if (!is.character(rxnA)) {
       stop("Invalid input. Enter in SMILES format or path to RXN file.",
-           call. = F)
+           call. = FALSE)
     }
     
     if (missing(DB)) {
@@ -610,7 +610,7 @@ rs.compute.DB <-
       } else if (format[[1]] == 'rxn') {
         rct <- .mdlParser(rxnA, DB$standardize, DB$explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       if (fpCached) {

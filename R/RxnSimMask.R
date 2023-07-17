@@ -55,15 +55,15 @@
   smi <- tryCatch({
     while (1) {
       if (mask != '') {
-        maskX <- .smilesParser(mask, F, F)
+        maskX <- .smilesParser(mask, FALSE, FALSE)
       } else {
         maskX <- NULL
       }
       
       tryCatch({
-        map <- rcdk::matches(substructure, mol, return.matches = T)
+        map <- rcdk::matches(substructure, mol, return.matches = TRUE)
       }, error = function(err) {
-        stop('Unable to find matches.', call. = F)
+        stop('Unable to find matches.', call. = FALSE)
         #stop(err)
       })
       if (map[[1]]$match == TRUE) {
@@ -88,17 +88,17 @@ ms.mask <-
             mask,
             molecule,
             format = 'smiles',
-            standardize = T,
-            explicitH = F,
-            recursive = F) {
+            standardize = TRUE,
+            explicitH = FALSE,
+            recursive = FALSE) {
     if (missing(substructure) || substructure == '') {
-      stop('Enter a structure to mask in form of a SMILES or SMARTS.', call. = F)
+      stop('Enter a structure to mask in form of a SMILES or SMARTS.', call. = FALSE)
     }
     if (missing(mask)) {
-      stop('Mask not specified.', call. = F)
+      stop('Mask not specified.', call. = FALSE)
     }
     if (missing(molecule)) {
-      stop('Input molecule missing.', call. = F)
+      stop('Input molecule missing.', call. = FALSE)
     }
     
     format <- tolower(format)
@@ -112,7 +112,7 @@ ms.mask <-
         mol <-
           .molParser(molecule, standardize = standardize, explicitH = explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       mask <- sub('\\s+', '', mask)
       .meta.mask(substructure, mask, mol, recursive)
@@ -157,17 +157,17 @@ rs.mask <-
             mask,
             reaction,
             format = 'rsmi',
-            standardize = T,
-            explicitH = F,
-            recursive = F) {
+            standardize = TRUE,
+            explicitH = FALSE,
+            recursive = FALSE) {
     if (missing(substructure) || substructure == '') {
-      stop('Enter a structure to mask in form of a SMILES or SMARTS.', call. = F)
+      stop('Enter a structure to mask in form of a SMILES or SMARTS.', call. = FALSE)
     }
     if (missing(mask)) {
-      stop('Mask not specified.', call. = F)
+      stop('Mask not specified.', call. = FALSE)
     }
     if (missing(reaction)) {
-      stop('Input reaction missing.', call. = F)
+      stop('Input reaction missing.', call. = FALSE)
     }
     
     format <- tolower(format)
@@ -180,7 +180,7 @@ rs.mask <-
         rct <-
           .mdlParser(reaction, standardize = standardize, explicitH = explicitH)
       } else {
-        stop("Invalid input format.", call. = F)
+        stop("Invalid input format.", call. = FALSE)
       }
       
       rct <- .rct.mask(substructure, mask, rct, recursive)

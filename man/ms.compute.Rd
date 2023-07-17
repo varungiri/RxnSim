@@ -10,15 +10,15 @@ Computes chemical similarity between two (or more) input molecules.\cr
 }
 
 \usage{
-ms.compute (molA, molB, format = 'smiles', standardize = T, explicitH = F, sim.method =
-            'tanimoto', fp.type = 'extended', fp.mode = 'bit', fp.depth = 6, fp.size = 
-            1024, fpCached = F)
-ms.compute.sim.matrix (molA, format = 'smiles', standardize = T, explicitH = F,
+ms.compute (molA, molB, format = 'smiles', standardize = TRUE, explicitH = FALSE,
             sim.method = 'tanimoto', fp.type = 'extended', fp.mode = 'bit', fp.depth = 6,
-            fp.size = 1024, clearCache = T)
-ms.compute.PCA(molA, format = 'smiles', standardize = T, explicitH = F, 
+            fp.size = 1024, fpCached = FALSE)
+ms.compute.sim.matrix (molA, format = 'smiles', standardize = TRUE, explicitH = FALSE,
+            sim.method = 'tanimoto', fp.type = 'extended', fp.mode = 'bit', fp.depth = 6,
+            fp.size = 1024, clearCache = TRUE)
+ms.compute.PCA(molA, format = 'smiles', standardize = TRUE, explicitH = FALSE, 
             fp.type = 'extended', fp.mode = 'bit', fp.depth = 6, fp.size = 1024,
-            clearCache = T)
+            clearCache = TRUE)
 }
 
 \arguments{

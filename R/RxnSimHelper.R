@@ -3,14 +3,14 @@
     stop(
       'Invalid reaction similarity algorithm specified.\n
          Use on of: \'msim\', and \'rsim\'',
-      call. = F
+      call. = FALSE
     )
   }
 }
 
 .fpTypeCheck <- function (fp.type, fp.mode) {
   if (!(fp.mode %in% c('bit', 'count'))) {
-    stop('Invalid fingerprint mode specificed.', call. = F)
+    stop('Invalid fingerprint mode specificed.', call. = FALSE)
   }
   
   if (fp.type %in% c(
@@ -30,7 +30,7 @@
         fp.type,
         '\' fingerprint type.\n
            \'signature\' and \'circular\' are allowed fingerprint types for count mode.',
-        call. = F
+        call. = FALSE
       )
     }
   } else if (fp.type == 'signature') {
@@ -41,11 +41,11 @@
         '\' fingerprint type.\n
            \'standard\', \'extended\', \'graph\', \'hybridization\', \'maccs\', \'estate\',
            \'kr\', \'circular\', \'pubchem\' and \'shortestpath\' are allowed fingerprint types for bit mode.',
-        call. = F
+        call. = FALSE
       )
     }
   } else if (fp.type != 'circular') {
-    stop('Invalid fingerprint type specificed.', call. = F)
+    stop('Invalid fingerprint type specificed.', call. = FALSE)
   }
 }
 
@@ -81,13 +81,13 @@
            \'dice\', \'rodgerstanimoto\', \'achiai\', \'cosine\', \'kulczynski2\', \'mt\',
            \'baroniurbanibuser\', \'tversky\', \'robust\', \'hamann\', \'pearson\', \'yule\',
            \'mcconnaughey\', \'simpson\'',
-        call. = F
+        call. = FALSE
       )
     } else if (sim.method[[1]] == 'tversky') {
       if (length(sim.method) != 3) {
         stop(
           'For Tversky metric, please specify Tversky coefficients. E.g., sim.method = c(\'tversky\', 1, 2).',
-          call. = F
+          call. = FALSE
         )
       }
     }
@@ -107,7 +107,7 @@
         '\' specified.\n
             Use \'tanimoto\', \'dice\', \'robust\', \'jaccard-count\' or \'tanimoto-count\' metric
            for feature-vectors.',
-        call. = F
+        call. = FALSE
       )
     }
   }
@@ -136,7 +136,7 @@
     }
     mol
   }, error = function(err) {
-    stop("Failed to parse: ", smiles, call. = F)
+    stop("Failed to parse: ", smiles, call. = FALSE)
   })
 }
 
@@ -178,7 +178,7 @@
     }
     mol
   }, error = function(err) {
-    stop("Failed to parse file: ", fileName, call. = F)
+    stop("Failed to parse file: ", fileName, call. = FALSE)
   }, finally = {
     if (!is.null(reader)) {
       .jcall(reader, 'V', 'close')
@@ -205,7 +205,7 @@
              objRxn)
     rxn <- c(RSMI = rsmi, rxn)
   }, error = function(err) {
-    stop("Failed to parse: ", rsmi, call. = F)
+    stop("Failed to parse: ", rsmi, call. = FALSE)
   })
 }
 
@@ -238,7 +238,7 @@
              objRxn)
     rxn <- c(RSMI = rsmi, rxn)
   }, error = function(err) {
-    stop("Failed to parse file: ", fileName, call. = F)
+    stop("Failed to parse file: ", fileName, call. = FALSE)
   }, finally = {
     if (!is.null(reader)) {
       .jcall(reader, 'V', 'close')
@@ -319,7 +319,7 @@
     
     rxn <- list(Reactants = Reacts, Products = Prods)
   }, error = function(err) {
-    stop('.jrxnParser: ', err, '\n', call. = F)
+    stop('.jrxnParser: ', err, '\n', call. = FALSE)
   })
 }
 
@@ -333,8 +333,8 @@
             fp.mode,
             fp.depth,
             fp.size,
-            verbose = F,
-            cached = F) {
+            verbose = FALSE,
+            cached = FALSE) {
     if (cached) {
       cache <- .fp.env$fp_map
     } else {
@@ -390,7 +390,7 @@
       }
     }))) {
       warning('Could not generate fingerprints. Try reducing fingerprint search depth.',
-              call. = F)
+              call. = FALSE)
       NaN
     }
     else {
@@ -432,7 +432,7 @@
             fp.mode = fp.mode,
             depth = fp.depth,
             size = fp.size,
-            verbose = T
+            verbose = TRUE
           )
         cache[[smi]] <- fp
       }
@@ -444,7 +444,7 @@
           fp.mode = fp.mode,
           depth = fp.depth,
           size = fp.size,
-          verbose = T
+          verbose = TRUE
         )
     }
     fp
@@ -458,7 +458,7 @@
             reversible,
             algo,
             sim.method,
-            verbose = F,
+            verbose = FALSE,
             smiles = NULL) {
     maxRS <- FALSE
     if (algo == 'msim_max') {
@@ -475,7 +475,7 @@
       dfpp <- .calcSimMapping(fpA_p, fpB_p, sim.method)
       lenDFrr <- nrow(dfrr)
       lenDFpp <- nrow(dfpp)
-      divFac <- ifelse(maxRS == T, (lenDFrr + lenDFpp),
+      divFac <- ifelse(maxRS == TRUE, (lenDFrr + lenDFpp),
                        ((lenA_r + lenB_r - lenDFrr) + (lenA_p + lenB_p - lenDFpp)))
       straight <- (sum(dfrr[3]) + sum(dfpp[3])) / divFac
       
@@ -484,7 +484,7 @@
         dfpr <- .calcSimMapping(fpA_p, fpB_r, sim.method)
         lenDFrp <- nrow(dfrp)
         lenDFpr <- nrow(dfpr)
-        divFac <- ifelse(maxRS == T, (lenDFrp + lenDFpr),
+        divFac <- ifelse(maxRS == TRUE, (lenDFrp + lenDFpr),
                          ((lenA_r + lenB_p - lenDFrp) + (lenA_p + lenB_r - lenDFpr)))
         cross <- (sum(dfrp[3]) + sum(dfpr[3])) / divFac
       } else {
@@ -561,8 +561,8 @@
           row.names(dfrr) <- c(1:length(dfrr[[1]]))
           colnames(dfpp) <- c('RCT1-Prod', 'RCT2-Prod', 'Similarity')
           row.names(dfpp) <- c(1:length(dfpp[[1]]))
-          print(dfrr, row.names = F)
-          print(dfpp, row.names = F)
+          print(dfrr, row.names = FALSE)
+          print(dfpp, row.names = FALSE)
         } else {
           if (!maxRS) {
             if (lenA_r > lenDFrp) {
@@ -605,8 +605,8 @@
           colnames(dfpr) <- c('RCT1-Prod', 'RCT2-React', 'Similarity')
           row.names(dfpr) <- c(1:length(dfpr[[1]]))
           
-          print(dfrp, row.names = F)
-          print(dfpr, row.names = F)
+          print(dfrp, row.names = FALSE)
+          print(dfpr, row.names = FALSE)
         }
         cat('\n')
         cat('Reaction similarity:\t',
@@ -690,7 +690,7 @@
 
 .addFP <- function (fpList) {
   if (is(fpList[[1]], 'featvec')) {
-    featrs_map <- new.env(parent = emptyenv(), hash = T)
+    featrs_map <- new.env(parent = emptyenv(), hash = TRUE)
     for (fp in fpList) {
       for (featr in fp@features) {
         f <- fingerprint::feature(featr)
@@ -719,7 +719,7 @@
     }
     fpSum
   } else {
-    stop('Undefined fingerprint class.', class. = F)
+    stop('Undefined fingerprint class.', class. = FALSE)
   }
 }
 
@@ -728,13 +728,13 @@
     stop('Inputs should be of \'featvec\' (S4 class) type.')
   }
   
-  featrs_mapA <- new.env(parent = emptyenv(), hash = T)
+  featrs_mapA <- new.env(parent = emptyenv(), hash = TRUE)
   for (featr in fpA@features) {
     f <- fingerprint::feature(featr)
     c <- fingerprint::count(featr)
     featrs_mapA[[f]] <- c
   }
-  featrs_mapB <- new.env(parent = emptyenv(), hash = T)
+  featrs_mapB <- new.env(parent = emptyenv(), hash = TRUE)
   for (featr in fpB@features) {
     f <- fingerprint::feature(featr)
     c <- fingerprint::count(featr)
@@ -758,7 +758,7 @@
     stop('Inputs should be of \'featvec\' (S4 class) type.')
   }
   
-  featrs_mapA <- new.env(parent = emptyenv(), hash = T)
+  featrs_mapA <- new.env(parent = emptyenv(), hash = TRUE)
   sumA <- 0
   for (featr in fpA@features) {
     f <- fingerprint::feature(featr)
@@ -767,7 +767,7 @@
     sumA <- sumA + (c * c)
   }
   sumB <- 0
-  featrs_mapB <- new.env(parent = emptyenv(), hash = T)
+  featrs_mapB <- new.env(parent = emptyenv(), hash = TRUE)
   for (featr in fpB@features) {
     f <- fingerprint::feature(featr)
     c <- fingerprint::count(featr)
